@@ -951,7 +951,6 @@ declare interface BasenameCacheEntry {
  */
 declare abstract class BasicEvaluatedExpression {
 	expression?:
-		| Program
 		| ImportDeclaration
 		| ExportNamedDeclaration
 		| ExportAllDeclaration
@@ -1011,6 +1010,7 @@ declare abstract class BasicEvaluatedExpression {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
+		| Program
 		| Property
 		| CatchClause
 		| ClassBody
@@ -1210,7 +1210,6 @@ declare abstract class BasicEvaluatedExpression {
 	 */
 	setExpression(
 		expression?:
-			| Program
 			| ImportDeclaration
 			| ExportNamedDeclaration
 			| ExportAllDeclaration
@@ -1270,6 +1269,7 @@ declare abstract class BasicEvaluatedExpression {
 			| MethodDefinition
 			| PropertyDefinition
 			| VariableDeclarator
+			| Program
 			| Property
 			| CatchClause
 			| ClassBody
@@ -3655,7 +3655,6 @@ declare abstract class ColumnarSyntaxTree {
 		fields?: string[]
 	):
 		| null
-		| Program
 		| ImportDeclaration
 		| ExportNamedDeclaration
 		| ExportAllDeclaration
@@ -3715,6 +3714,7 @@ declare abstract class ColumnarSyntaxTree {
 		| MethodDefinition
 		| PropertyDefinition
 		| VariableDeclarator
+		| Program
 		| Property
 		| CatchClause
 		| ClassBody
@@ -22849,7 +22849,6 @@ declare interface NodeEnvironmentPluginOptions {
 	infrastructureLogging: InfrastructureLogging;
 }
 type NodeEstreeIndex =
-	| Program
 	| ImportDeclaration
 	| ExportNamedDeclaration
 	| ExportAllDeclaration
@@ -22909,6 +22908,7 @@ type NodeEstreeIndex =
 	| MethodDefinition
 	| PropertyDefinition
 	| VariableDeclarator
+	| Program
 	| Property
 	| CatchClause
 	| ClassBody
@@ -28684,7 +28684,7 @@ declare interface RecursiveNonNullable<T> {}
  * One identifier occurrence that refers to a binding.
  */
 declare abstract class Reference {
-	identifier: Identifier;
+	identifier: ScopeIdentifier;
 	from: Scope;
 	resolved?: Variable;
 }
@@ -31507,6 +31507,21 @@ declare abstract class Scope {
 	 */
 	paramBoundary: number;
 	getBinding(name: string): undefined | Variable;
+}
+
+/**
+ * One occurrence of a name in the source, which a rename rewrites in place.
+ */
+declare abstract class ScopeIdentifier {
+	name: string;
+	start: number;
+	end: number;
+
+	/**
+	 * Where it sits in the source, as the ESTree identifier it replaces held it.
+	 * @deprecated read `start` and `end`
+	 */
+	get range(): [number, number];
 }
 
 /**
@@ -35478,7 +35493,7 @@ declare interface Values {
  */
 declare abstract class Variable {
 	name: string;
-	identifiers: Identifier[];
+	identifiers: ScopeIdentifier[];
 	references: Reference[];
 	scope: Scope;
 }
@@ -38005,7 +38020,6 @@ declare namespace exports {
 					fields?: string[]
 				) =>
 					| null
-					| Program
 					| ImportDeclaration
 					| ExportNamedDeclaration
 					| ExportAllDeclaration
@@ -38065,6 +38079,7 @@ declare namespace exports {
 					| MethodDefinition
 					| PropertyDefinition
 					| VariableDeclarator
+					| Program
 					| Property
 					| CatchClause
 					| ClassBody
@@ -38161,7 +38176,6 @@ declare namespace exports {
 				fields?: string[]
 			) =>
 				| null
-				| Program
 				| ImportDeclaration
 				| ExportNamedDeclaration
 				| ExportAllDeclaration
@@ -38221,6 +38235,7 @@ declare namespace exports {
 				| MethodDefinition
 				| PropertyDefinition
 				| VariableDeclarator
+				| Program
 				| Property
 				| CatchClause
 				| ClassBody
